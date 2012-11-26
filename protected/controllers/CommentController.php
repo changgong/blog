@@ -8,6 +8,8 @@ class CommentController extends Controller
 	 */
 	public $layout='//layouts/column2';
 
+    private $_model;
+
 	/**
 	 * @return array action filters
 	 */
@@ -32,7 +34,7 @@ class CommentController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('create','update','approve'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -52,7 +54,7 @@ class CommentController extends Controller
 	public function actionView($id)
 	{
 		$this->render('view',array(
-			'model'=>$this->loadModel($id),
+			'model'=>$this->loadModel(),
 		));
 	}
 
@@ -86,7 +88,7 @@ class CommentController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model=$this->loadModel($id);
+		$model=$this->loadModel();
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -110,7 +112,7 @@ class CommentController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		$this->loadModel()->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
@@ -122,7 +124,11 @@ class CommentController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Comment');
+        $dataProvider=new CActiveDataProvider('Comment',array(
+            'criteria'=>array(
+                'with'=>'post',
+                'order'=>'t.status,t.create_time DESC',
+            )));
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -144,19 +150,6 @@ class CommentController extends Controller
 	}
 
 	/**
-	 * Returns the data model based on the primary key given in the GET variable.
-	 * If the data model is not found, an HTTP exception will be raised.
-	 * @param integer the ID of the model to be loaded
-	 */
-	public function loadModel($id)
-	{
-		$model=Comment::model()->findByPk($id);
-		if($model===null)
-			throw new CHttpException(404,'The requested page does not exist.');
-		return $model;
-	}
-
-	/**
 	 * Performs the AJAX validation.
 	 * @param CModel the model to be validated
 	 */
@@ -168,4 +161,26 @@ class CommentController extends Controller
 			Yii::app()->end();
 		}
 	}
+
+    public function actionApprove(){
+        if(Yii::app()->request->isPostRequest){
+            $comment = $this->loadModel();
+            $comment->approve();
+            $this->redirect(array('index'));
+        }else{
+            throw new CHttpException(400,'Invalid request...');
+        }
+    }
+
+    public function loadModel(){
+        if($this->_model === null){
+            if(isset($_GET['id'])){
+                $this->_model = Comment::model()->findByPk($_GET['id']);
+            }
+            if($this->_model === null){
+                throw new CHttpException(404,'The requested page does not existed.');
+            }
+        }
+        return $this->_model;
+    } 
 }

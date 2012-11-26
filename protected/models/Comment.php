@@ -15,6 +15,10 @@
  */
 class Comment extends CActiveRecord
 {
+
+    const STATUS_PENDING = 1;
+    const STATUS_APPROVED = 2;
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -41,12 +45,10 @@ class Comment extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('content, status, create_time, author, email, post_id', 'required'),
-			array('status, create_time, post_id', 'numerical', 'integerOnly'=>true),
+			array('content, author, email', 'required'),
 			array('author, email, url', 'length', 'max'=>128),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, content, status, create_time, author, email, url, post_id', 'safe', 'on'=>'search'),
+            array('email','email'),
+            array('url','url'),
 		);
 	}
 
@@ -58,6 +60,7 @@ class Comment extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+            'post'=>array(self::BELONGS_TO,'Post','post_id'),
 		);
 	}
 
@@ -67,13 +70,13 @@ class Comment extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'content' => 'Content',
+			'id' => 'Id',
+			'content' => 'Comment',
 			'status' => 'Status',
 			'create_time' => 'Create Time',
-			'author' => 'Author',
+			'author' => 'Name',
 			'email' => 'Email',
-			'url' => 'Url',
+			'url' => 'Website',
 			'post_id' => 'Post',
 		);
 	}
@@ -102,4 +105,48 @@ class Comment extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
+    public function beforeSave(){
+        if(parent::beforeSave()){
+            if($this->isNewRecord){
+                $this->create_time = time();
+            }
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function approve(){
+        $this->status = Comment::STATUS_APPROVED;
+        $this->update(array('status'));
+    }
+    
+    public function getUrl($post=null){
+        if($post === null){
+            $post = $this->post;
+        }
+        return $post->url.'#c'.$this->id;
+    }
+
+    public function getAuthorLink(){
+        if(!empty($this->url)){
+            return CHtml::link(CHtml::encode($this->author),$this->url);
+        }else{
+            return CHtml::encode($this->author);
+        }
+    }
+
+    public function getPendingCommentCount(){
+        return $this->count('status='.self::STATUS_PENDING);
+    }
+
+    public function findRecentComments($limit = 10){
+        return $this->with('post')->findAll(array(
+            'condition'=>'t.status='.self::STATUS_APPROVED,
+            'order'=>'t.create_time DESC',
+            'limit'=>$limit,
+        ));
+    }
+
 }

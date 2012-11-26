@@ -10,7 +10,7 @@
  * @property string $type
  * @property integer $position
  */
-class Look extends CActiveRecord
+class Lookup extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -93,4 +93,35 @@ class Look extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+    
+    private static $_items = array();
+
+    public static function items($type){
+        if(!isset(self::$_items[$type])){
+            self::loadItems($type);
+        }
+        return self::$_items[$type];
+    }
+
+    public static function item($type,$code){
+        if(!isset(self::$_items[$type])){
+            self::loadItems($type);
+        }
+        return isset(self::$_items[$type][$code]) ? self::$_items[$type][$code] : false;
+    }
+
+    private function loadItems($type){
+        self::$_items[$type] = array();
+        $models = self::model()->findAll(array(
+            'condition'=>'type = :type',
+            'params'=>array(':type'=>$type),
+            'order'=>'position',
+        ));
+        foreach($models as $model){
+            self::$_items[$type][$model->code] = $model->name;
+        }
+    }
+
+
+
 }
