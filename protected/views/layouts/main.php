@@ -42,7 +42,9 @@
 			'links'=>$this->breadcrumbs,
 		)); ?><!-- breadcrumbs -->
 	<?php endif?>
-
+	<div id="dialogin">
+		<a href="javascript:void(0)">Login</a>
+	</div>
 	<?php echo $content; ?>
 
 	<div class="clear"></div>
