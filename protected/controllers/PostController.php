@@ -83,7 +83,7 @@ class PostController extends Controller
 		$model=new Post;
 
 		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		$this->performAjaxValidation($model);
 
 		if(isset($_POST['Post']))
 		{
@@ -97,6 +97,31 @@ class PostController extends Controller
 		));
 	}
 
+	public function actionNew(){
+		if(isset($_POST['Post'])){
+
+		}
+		$this->render('new');
+	}
+	public function actionSuggestTag($limit = 10){
+		if(isset($_GET['term'])){
+			$criteria = new CDbCriteria();
+			$criteria->condition = 'name like :keyword';
+			$criteria->params = array(':keyword'=>'%'.$_GET['term'].'%');
+			$criteria->order = 'name';
+			$criteria->limit = $limit;
+			$tags = Tag::model()->findAll($criteria);
+			$suggest = array();
+			foreach($tags as $tag){
+				$suggest[] = array(
+					'id'=>$tag->id,
+					'label'=>$tag->name,
+					'value'=>$tag->name,
+					);
+			}
+			echo CJSON::encode($suggest);
+		}
+	}
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.

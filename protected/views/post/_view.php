@@ -26,11 +26,11 @@
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('create_time')); ?>:</b>
-	<?php echo CHtml::encode($data->create_time); ?>
+	<?php echo CHtml::encode(date('Y-m-d H:i',$data->create_time)); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('update_time')); ?>:</b>
-	<?php echo CHtml::encode($data->update_time); ?>
+	<?php echo CHtml::encode(date('Y-m-d H:i',$data->update_time)); ?>
 	<br />
 
 	<?php /*

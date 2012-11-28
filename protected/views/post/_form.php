@@ -8,7 +8,11 @@
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'post-form',
-	'enableAjaxValidation'=>false,
+	'enableAjaxValidation'=>true,
+	// 'enableClientValidation'=>true,
+	// 'clientOptions'=>array(
+	// 	'validateOnSubmit'=>true,
+	// ),
 )); ?>
 
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
@@ -23,7 +27,18 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'content'); ?>
-		<?php echo $form->textArea($model,'content',array('rows'=>6, 'cols'=>50)); ?>
+		<?php $this->widget('ext.ckeditor.CKEditorWidget',array(
+			'model'=>$model,
+			'attribute'=>'content',
+			'defaultValue'=>'Write content here.',
+			'config'=>array(
+				'height'=>'200px',
+				'width'=>'80%',
+				'toolbar'=>'Basic'),
+			// 'ckEditor'=>Yii::app()->basePath.'/extensions/ckeditor/ckeditor.php',
+			// 'ckBasePath'=>Yii::app()->getBaseUrl(true).'/protected/extensions/ckeditor/',
+			));
+		?>
 		<?php echo $form->error($model,'content'); ?>
 	</div>
 
