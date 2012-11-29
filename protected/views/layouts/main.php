@@ -14,7 +14,9 @@
 
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />
-
+	<?php Yii::app()->clientScript->registerScriptFile($this->getAssetsBase().'/js/jquery-1.8.3.js',CClientScript::POS_END); ?>
+	<?php Yii::app()->clientScript->registerScriptFile($this->getAssetsBase().'/js/colorbox/jquery.colorbox.js',CClientScript::POS_END); ?>
+	<?php Yii::app()->clientScript->registerScriptFile($this->getAssetsBase().'/js/home.js',CClientScript::POS_END); ?>
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
 </head>
 
@@ -42,8 +44,9 @@
 			'links'=>$this->breadcrumbs,
 		)); ?><!-- breadcrumbs -->
 	<?php endif?>
-	<div id="dialogin">
-		<a href="javascript:void(0)">Login</a>
+	<div>
+		<input id="baseurl" type="hidden" value=<?php echo Yii::app()->baseUrl; ?> />
+		<a id = "dialogin" href="javascript:void(0)">Login</a>
 	</div>
 	<?php echo $content; ?>
 

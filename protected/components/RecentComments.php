@@ -1,7 +1,7 @@
 <?php
-Yii::import('zii.widgets.CPortlet');
-class RecentComments extends CPortlet{
+class RecentComments extends PortletBase{
     public $title = 'Recent Comments';
+
     public $maxComments = 10;
 
     public function getRecentComments(){

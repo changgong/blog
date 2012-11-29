@@ -1,6 +1,5 @@
 <?php
-Yii::import('zii.widgets.CPortlet');
-class TagCloud extends CPortlet{
+class TagCloud extends PortletBase{
     public $title = 'Tags';
     public $maxTags = 20;
 
@@ -8,6 +7,9 @@ class TagCloud extends CPortlet{
         $tags = Tag::model()->findTagWeights($this->maxTags);
         foreach($tags as $tag=>$weight){
             $link = CHtml::link(CHtml::encode($tag),array('post/index','tag'=>$tag));
+            if($weight < 12 ){
+                $weight = 12;
+            }
             echo CHtml::tag('span',array(
                 'class'=>'tag',
                 'style'=>"font-size:{$weight}pt",

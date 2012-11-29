@@ -8,7 +8,7 @@
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'My Web Application',
-
+	'defaultController'=>'post',
 	// preloading 'log' component
 	'preload'=>array('log'),
 
@@ -87,5 +87,12 @@ return array(
         'commentNeedApproval'=>true,
         'tagCloudCount'=>20,
         'recentCommentCount'=>10,
+        'info'=>array(
+        	'namejob'=>'Jason Student',
+        	'qq'=>'583103324',
+        	'ageadd'=>'24 Shanghai zhangsq1988@gmail.com',
+        	'intrest'=>'Web,PHP,Music,Tech',
+        	'other'=>'2012-2012|Ecnu',
+        	),
 	),
 );

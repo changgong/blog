@@ -48,6 +48,7 @@ class PostController extends Controller
 	 */
 	public function actionView()
 	{
+		$this->layout = '//layouts/view';
         $post = $this->loadModel();
         $comment = $this->newComment($post);
         $this->render('view',array(
@@ -168,8 +169,29 @@ class PostController extends Controller
 	/**
 	 * Lists all models.
 	 */
+	// public function actionIndex()
+	// {
+ //        $criteria = new CDbCriteria(array(
+ //            'condition'=>'status='.Post::STATUS_PUBLISHED,
+ //            'order'=>'update_time DESC',
+ //            'with'=>'commentCount'));
+ //        if(isset($_GET['tag'])){
+ //            $criteria->addSearchCondition('tags',$_GET['tag']);
+ //        }
+ //        $dataProvider = new CActiveDataProvider('Post',array(
+ //            'pagination'=>array(
+ //                'pageSize'=>5,
+ //            ),
+ //            'criteria'=>$criteria,
+ //        ));
+ //        $this->render('index',array(
+ //            'dataProvider'=>$dataProvider,
+ //        ));
+ //    }
+
 	public function actionIndex()
 	{
+        $this->layout = '//layouts/postcol2';
         $criteria = new CDbCriteria(array(
             'condition'=>'status='.Post::STATUS_PUBLISHED,
             'order'=>'update_time DESC',
@@ -183,11 +205,10 @@ class PostController extends Controller
             ),
             'criteria'=>$criteria,
         ));
-        $this->render('index',array(
+        $this->render('post',array(
             'dataProvider'=>$dataProvider,
         ));
     }
-
 	/**
 	 * Manages all models.
 	 */

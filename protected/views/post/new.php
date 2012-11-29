@@ -1,6 +1,6 @@
 <?php
-	Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery-1.8.3.js',CClientScript::POS_END);
-	Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js/post-validator.js',CClientScript::POS_END);
+	Yii::app()->clientScript->registerScriptFile($this->getAssetsBase().'/js/jquery-1.8.3.js',CClientScript::POS_END);
+	Yii::app()->clientScript->registerScriptFile($this->getAssetsBase().'/js/post-validator.js',CClientScript::POS_END);
 ?>
 <h1>Create New Post</h1>
 <form action="/post/new" method="post">
