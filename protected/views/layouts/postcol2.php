@@ -9,7 +9,6 @@
     </div>
     <div class="sidebar">
       <div id="secondary" class="widget-area box rounded">
-        <?php $this->widget('UserMenu'); ?>
         <?php $this->widget('RecentComments',array(
             'maxComments'=>Yii::app()->params['recentCommentCount'],
         ));
@@ -17,6 +16,9 @@
         <?php $this->widget('TagCloud',array(
             'maxTags'=>Yii::app()->params['tagCloudCount'],
           ));
+        ?>
+        <?php 
+            $this->widget('SinaWeibo');
         ?>
       </div>
       <div id="go-top" class="go-top">Top</div>
